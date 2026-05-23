@@ -217,6 +217,28 @@
       margin-top: 8px;
     }
 
+    .admin-panel {
+      margin: 12px auto 0;
+      max-width: 260px;
+      text-align: center;
+      background: rgba(255,255,255,0.68);
+      border: 2px dashed var(--sun-yellow);
+      border-radius: 18px;
+      padding: 8px;
+    }
+
+    .admin-panel summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: #0b7285;
+    }
+
+    .admin-panel button {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      padding: 9px 12px;
+    }
+
     @media print {
       body {
         background: white;
@@ -243,8 +265,13 @@
       <div id="pageButtons" class="controls"></div>
 
       <div class="controls">
-        <button class="danger" onclick="resetAll()">🧽 Reset Everything</button>
+        <button class="danger" onclick="resetTicksOnly()">🧽 Reset Ticks Only</button>
       </div>
+
+      <details class="admin-panel">
+        <summary>⚙️ Admin options</summary>
+        <button class="danger" onclick="shuffleAllBoards()">🎲 Shuffle / Create New Cards</button>
+      </details>
 
       <div class="small-note">Tap a tile to mark a sighting. Each person has their own 12-square card. This version syncs using Firebase.</div>
     </header>
@@ -257,9 +284,7 @@
 
     <div id="playerPages"></div>
 
-    <p class="note">
-      Editing tip: change the names inside <strong>familyMembers</strong>, and change or remove any bingo squares inside <strong>bingoItems</strong>. Save this file as <strong>index.html</strong>.
-    </p>
+    
   </div>
 
   <script>
@@ -534,7 +559,22 @@
       return winningLines.some(line => line.every(index => checked[index]));
     }
 
-    async function resetAll() {
+    async function resetTicksOnly() {
+      Object.keys(state.overview).forEach(index => {
+        state.overview[index] = false;
+      });
+
+      familyMembers.forEach(name => {
+        if (state.boards[name]) {
+          state.boards[name].checked = {};
+        }
+      });
+
+      renderAll();
+      await saveState();
+    }
+
+    async function shuffleAllBoards() {
       state = createFreshState();
       renderAll();
       await saveState();
