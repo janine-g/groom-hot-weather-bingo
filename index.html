@@ -254,6 +254,17 @@
   </div>
 
   <script>
+        // 🔥 Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-UsE2lGAuZjEy9i5kl2OSlmOJ0wbIiy0",
+      authDomain: "groom-hot-weather-bingo.firebaseapp.com",
+      projectId: "groom-hot-weather-bingo",
+      storageBucket: "groom-hot-weather-bingo.firebasestorage.app",
+      messagingSenderId: "991263884911",
+      appId: "1:991263884911:web:4798ec87001a88a3e1ef9a",
+      measurementId: "G-MTF4HNSZ22"
+    };
+
     const bingoItems = [
       "🥵 It is boiling",
       "🧴 Sunburnt face/shoulders",
@@ -465,10 +476,20 @@
       renderBoards();
     }
 
-    ensureBoards();
+        ensureBoards();
     renderPlayerSelect();
     renderOverview();
     renderBoards();
   </script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+
 </body>
 </html>
