@@ -178,8 +178,26 @@
     .tile.checked, .big-card.checked {
       background: var(--green);
       border-color: var(--sea-blue);
-      text-decoration: line-through;
-      opacity: 0.92;
+      position: relative;
+      opacity: 0.96;
+    }
+
+    .tile.checked::after, .big-card.checked::after {
+      content: "✓";
+      position: absolute;
+      top: 6px;
+      right: 9px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--sea-blue);
+      color: white;
+      font-size: 1rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 7px rgba(0,0,0,0.18);
     }
 
     .winner {
@@ -306,7 +324,7 @@
       "🥵 It is boiling",
       "🧴 Sunburnt face/shoulders",
       "🩴 Someone wearing sliders with socks",
-      "👕 Gross man with top off",
+      "👕 Fat bloke with top off",
       "🔥 Child having a meltdown",
       "🍺 Someone already drunk before noon",
       "🚗 Car windows fully down with loud music",
@@ -364,7 +382,10 @@
       "🗣️ People socialising out on the street",
       "🧥 Someone wearing a jumper/coat",
       "🥵 People complaining about it being hot",
-      "😆 Kids squealing in the street"
+      "😆 Kids squealing in the street",
+      "🎶 People listening to reggae because it is just like the Caribbean",
+      "🌳 BBQs in the park",
+      "🍻 People putting ice in pints of cider"
     ];
 
     const familyMembers = [
