@@ -281,15 +281,14 @@
       </p>
 
       <div id="pageButtons" class="controls"></div>
-
-      <div class="controls">
-        <button class="danger" onclick="resetTicksOnly()">🧽 Reset Ticks Only</button>
-      </div>
-
       <details class="admin-panel">
         <summary>⚙️ Admin options</summary>
+        <button class="danger" onclick="resetTicksOnly()">🧽 Reset Ticks Only</button>
         <button class="danger" onclick="shuffleAllBoards()">🎲 Shuffle / Create New Cards</button>
       </details>
+
+      <div class="small-note">Tap a tile to mark a sighting. Each person has their own 12-square card. This version syncs using Firebase.</div>
+    </header>
 
     <section id="page-main" class="page-view active">
       <h2 class="section-title">🏖️ Main Board</h2>
