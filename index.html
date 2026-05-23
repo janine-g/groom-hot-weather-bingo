@@ -74,7 +74,7 @@
       margin-top: 16px;
     }
 
-    button, select {
+    button {
       border: none;
       border-radius: 999px;
       padding: 11px 15px;
@@ -86,16 +86,14 @@
       font-size: 0.95rem;
     }
 
-    button:hover, select:hover {
+    button:hover {
       transform: translateY(-1px);
     }
 
-    .orange {
+    .tab-button.active {
       background: var(--sun-orange);
-    }
-
-    .pink {
-      background: #ff5d8f;
+      color: white;
+      outline: 3px solid rgba(255, 255, 255, 0.9);
     }
 
     .danger {
@@ -109,6 +107,14 @@
       color: #0b7285;
     }
 
+    .page-view {
+      display: none;
+    }
+
+    .page-view.active {
+      display: block;
+    }
+
     .overview-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
@@ -116,11 +122,9 @@
       margin-bottom: 22px;
     }
 
-    .family-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 16px;
-      align-items: start;
+    .single-player-wrap {
+      max-width: 760px;
+      margin: 0 auto;
     }
 
     .board {
@@ -134,7 +138,7 @@
     .board h3 {
       margin: 0 0 10px;
       text-align: center;
-      font-size: 1.3rem;
+      font-size: 1.45rem;
       color: #ef7b00;
     }
 
@@ -168,7 +172,7 @@
 
     .tile {
       cursor: pointer;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
     }
 
     .tile.checked, .big-card.checked {
@@ -236,22 +240,22 @@
         Bank Holiday family spotting game: tick it when someone says it, does it, wears it, buys it, moans about it, or dramatically melts beside a fan.
       </p>
 
+      <div id="pageButtons" class="controls"></div>
+
       <div class="controls">
-        <select id="playerSelect"></select>
-        <button class="orange" onclick="randomiseBoard()">🎲 Shuffle Selected Card</button>
-        <button onclick="resetSelectedBoard()">↩️ Reset Selected Card</button>
-        <button class="pink" onclick="shuffleAllBoards()">🌈 Shuffle All Cards</button>
         <button class="danger" onclick="resetAll()">🧽 Reset Everything</button>
       </div>
 
-      <div class="small-note">First to complete a row wins. Big overview board shows every possible item. This version syncs using Firebase.</div>
+      <div class="small-note">Tap a tile to mark a sighting. Each person has their own 12-square card. This version syncs using Firebase.</div>
     </header>
 
-    <h2 class="section-title">🏖️ Big Family Overview Board</h2>
-    <div id="overview" class="overview-grid"></div>
+    <section id="page-main" class="page-view active">
+      <h2 class="section-title">🏖️ Main Board</h2>
+      <div id="overview" class="overview-grid"></div>
+      <p class="note">Tap a tile to mark a sighting on the main overview board.</p>
+    </section>
 
-    <h2 class="section-title">🍦 Smaller Family Bingo Cards</h2>
-    <div id="boards" class="family-grid"></div>
+    <div id="playerPages"></div>
 
     <p class="note">
       Editing tip: change the names inside <strong>familyMembers</strong>, and change or remove any bingo squares inside <strong>bingoItems</strong>. Save this file as <strong>index.html</strong>.
@@ -346,7 +350,7 @@
       "🐝 Janine"
     ];
 
-    const boardSize = 9;
+    const boardSize = 12;
 
     let state = {
       boards: {},
@@ -354,6 +358,7 @@
     };
 
     let isSaving = false;
+    let currentPage = "main";
 
     function shuffle(array) {
       return [...array].sort(() => Math.random() - 0.5);
@@ -378,6 +383,13 @@
     function ensureBoards() {
       familyMembers.forEach(name => {
         if (!state.boards[name]) {
+          state.boards[name] = {
+            items: shuffle(bingoItems).slice(0, boardSize),
+            checked: {}
+          };
+        }
+
+        if (state.boards[name].items.length !== boardSize) {
           state.boards[name] = {
             items: shuffle(bingoItems).slice(0, boardSize),
             checked: {}
@@ -419,18 +431,34 @@
     }
 
     function renderAll() {
-      renderPlayerSelect();
+      renderPageButtons();
       renderOverview();
-      renderBoards();
+      renderPlayerPages();
+      showPage(currentPage);
     }
 
-    function renderPlayerSelect() {
-      const select = document.getElementById("playerSelect");
-      const currentValue = select.value;
-      select.innerHTML = familyMembers.map(name => `<option value="${name}">${name}</option>`).join("");
-      if (currentValue && familyMembers.includes(currentValue)) {
-        select.value = currentValue;
-      }
+    function pageIdForName(name) {
+      return "player-" + safeId(name);
+    }
+
+    function renderPageButtons() {
+      const buttons = document.getElementById("pageButtons");
+      buttons.innerHTML = `
+        <button class="tab-button ${currentPage === "main" ? "active" : ""}" onclick="showPage('main')">🏖️ Main Board</button>
+        ${familyMembers.map(name => `<button class="tab-button ${currentPage === pageIdForName(name) ? "active" : ""}" onclick="showPage('${pageIdForName(name)}')">${name}</button>`).join("")}
+      `;
+    }
+
+    function showPage(pageName) {
+      currentPage = pageName;
+      document.querySelectorAll(".page-view").forEach(page => page.classList.remove("active"));
+
+      const page = document.getElementById(pageName === "main" ? "page-main" : "page-" + pageName);
+      if (page) page.classList.add("active");
+
+      document.querySelectorAll(".tab-button").forEach(button => button.classList.remove("active"));
+      const matchingButton = [...document.querySelectorAll(".tab-button")].find(button => button.getAttribute("onclick") === `showPage('${pageName}')`);
+      if (matchingButton) matchingButton.classList.add("active");
     }
 
     function renderOverview() {
@@ -441,27 +469,33 @@
       }).join("");
     }
 
-    function renderBoards() {
-      const wrapper = document.getElementById("boards");
+    function renderPlayerPages() {
+      const wrapper = document.getElementById("playerPages");
       wrapper.innerHTML = "";
 
       familyMembers.forEach(name => {
         const board = state.boards[name];
-        const boardEl = document.createElement("div");
-        boardEl.className = "board";
+        const page = document.createElement("section");
+        page.className = "page-view";
+        page.id = "page-" + pageIdForName(name);
 
-        boardEl.innerHTML = `
-          <h3>${name}'s Card</h3>
-          <div class="bingo-grid">
-            ${board.items.map((item, index) => {
-              const checked = board.checked[index] ? "checked" : "";
-              return `<div class="tile ${checked}" onclick="toggleTile('${escapeName(name)}', ${index})">${item}</div>`;
-            }).join("")}
+        page.innerHTML = `
+          <h2 class="section-title">${name}'s Bingo Card</h2>
+          <div class="single-player-wrap">
+            <div class="board">
+              <h3>${name}'s Card</h3>
+              <div class="bingo-grid">
+                ${board.items.map((item, index) => {
+                  const checked = board.checked[index] ? "checked" : "";
+                  return `<div class="tile ${checked}" onclick="toggleTile('${escapeName(name)}', ${index})">${item}</div>`;
+                }).join("")}
+              </div>
+              <div id="winner-${safeId(name)}" class="winner ${isWinner(name) ? "show" : ""}">🏆 Bingo! ${name} has completed a row!</div>
+            </div>
           </div>
-          <div id="winner-${safeId(name)}" class="winner ${isWinner(name) ? "show" : ""}">🏆 Bingo! ${name} has completed a row!</div>
         `;
 
-        wrapper.appendChild(boardEl);
+        wrapper.appendChild(page);
       });
     }
 
@@ -481,7 +515,8 @@
 
     async function toggleTile(name, index) {
       state.boards[name].checked[index] = !state.boards[name].checked[index];
-      renderBoards();
+      renderPlayerPages();
+      showPage(currentPage);
       await saveState();
     }
 
@@ -491,41 +526,12 @@
         [0, 1, 2],
         [3, 4, 5],
         [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6]
+        [9, 10, 11],
+        [0, 3, 6, 9],
+        [1, 4, 7, 10],
+        [2, 5, 8, 11]
       ];
       return winningLines.some(line => line.every(index => checked[index]));
-    }
-
-    async function randomiseBoard() {
-      const selected = document.getElementById("playerSelect").value;
-      state.boards[selected] = {
-        items: shuffle(bingoItems).slice(0, boardSize),
-        checked: {}
-      };
-      renderBoards();
-      await saveState();
-    }
-
-    async function resetSelectedBoard() {
-      const selected = document.getElementById("playerSelect").value;
-      state.boards[selected].checked = {};
-      renderBoards();
-      await saveState();
-    }
-
-    async function shuffleAllBoards() {
-      familyMembers.forEach(name => {
-        state.boards[name] = {
-          items: shuffle(bingoItems).slice(0, boardSize),
-          checked: {}
-        };
-      });
-      renderBoards();
-      await saveState();
     }
 
     async function resetAll() {
