@@ -1,14 +1,353 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Great Groom Heatwave Bingo</title>
+
+Stopped thinking
+I’ll make this as a copy-paste single-file version, keeping the same “main overview board + smaller family boards” idea, but swapping the theme into hot-weather bank-holiday quote bingo.
+
+
+Not solely quotes actually but also things that we may see (fat man with his top off kind of thing 😆)
+
+Yes 🌴
+Changes you make in the ChatGPT canvas/code editor are normally saved automatically as you edit them.
+
+I could see your latest changes, and I’ve now:
+
+Added emojis before the final 4 statements
+
+Fixed the missing commas there too (those would have broken the script 😆)
+
+Your final four entries now read:
+
+"🗣️ People socialising out on the street",
+"🧥 Someone wearing a jumper/coat",
+"🥵 People complaining about it being hot",
+"😆 Kids squealing in the street"
+The heatwave bingo creature is alive again 🧊☀️
+
+
+Great British Heatwave Bingo Full Index
+Also add one at Row 289
+
+Done 😎☀️
+
+I added an emoji to that row too:
+
+"☀️ People sunbathing in the parks",
+
+Does the code already have the firebase aspect in?
+
+Not yet 🌴
+
+The current version is a fully self-contained local-storage version, meaning:
+
+✅ Works instantly
+
+✅ Saves ticks on the same device/browser
+
+✅ Easy to edit
+
+❌ Family members cannot see each other’s live updates across devices
+
+❌ No shared syncing yet
+
+At the moment it uses this line:
+
+localStorage.setItem(...)
+which stores data only on that device.
+
+🔥 To Make It Like Your Original Shared Bingo
+You would add Firebase so that:
+
+Everyone sees updates live
+
+Boards sync across phones
+
+Progress is shared
+
+Same game works for everybody
+
+Can be used like a mini app/PWA
+
+🌴 Current Situation
+You now basically have:
+
+Version 1
+Local / Simple
+Very easy
+
+No Firebase needed
+
+Great for testing/editing
+
+Version 2
+Shared Live Family Version
+Needs:
+
+Firebase config added
+
+Firestore enabled
+
+A few code swaps
+
+⚡ My Recommendation
+Keep this version as your:
+
+“sandbox chaos version”
+Then once you’re happy with wording/items/theme, I can convert THIS exact file into the full:
+
+☀️ LIVE SHARED HEATWAVE BINGO VERSION
+with:
+
+Firebase syncing
+
+Shared family progress
+
+Winner tracking
+
+Cross-device updates
+
+Installable phone app
+
+Proper multiplayer chaos 😆
+
+You’re actually getting very close to being able to spin these up rapidly for literally any theme:
+
+Work bingo
+
+Family bingo
+
+Holiday bingo
+
+Airport bingo
+
+IKEA bingo
+
+School run bingo
+
+British supermarket bingo
+
+Dog walk bingo
+
+Parent phrases bingo
+
+Tiny little digital gremlins everywhere 🌭
+
+
+Remind me... where do I paste the below....
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA-UsE2lGAuZjEy9i5kl2OSlmOJ0wbIiy0",
+    authDomain: "groom-hot-weather-bingo.firebaseapp.com",
+    projectId: "groom-hot-weather-bingo",
+    storageBucket: "groom-hot-weather-bingo.firebasestorage.app",
+    messagingSenderId: "991263884911",
+    appId: "1:991263884911:web:4798ec87001a88a3e1ef9a",
+    measurementId: "G-MTF4HNSZ22"
+
+Paste it inside the <script> section near the top, BEFORE the bingo items list 🌴
+
+So in your file, find this:
+
+<script>
+    const bingoItems = [
+…and replace it with THIS:
+
+<script>
+
+    // 🔥 Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-UsE2lGAuZjEy9i5kl2OSlmOJ0wbIiy0",
+      authDomain: "groom-hot-weather-bingo.firebaseapp.com",
+      projectId: "groom-hot-weather-bingo",
+      storageBucket: "groom-hot-weather-bingo.firebasestorage.app",
+      messagingSenderId: "991263884911",
+      appId: "1:991263884911:web:4798ec87001a88a3e1ef9a",
+      measurementId: "G-MTF4HNSZ22"
+    };
+
+    const bingoItems = [
+BUT... ⚠️
+That alone does NOT activate Firebase yet.
+
+You ALSO need the Firebase SDK imports above the closing </body> tag.
+
+So just BEFORE this:
+
+</body>
+add this:
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+At that point:
+
+Firebase is connected ✅
+
+But the game is STILL using local storage only ❌
+
+The FINAL step later is swapping the save/load functions to Firestore live syncing.
+
+You’re basically wiring the house before turning the electricity on 😆⚡
+
+
+what row does that latest code go to
+
+Because you’ve added/edited lines, the exact row number will shift a bit 😆
+But:
+
+🌴 Firebase Config Block
+Paste this:
+
+const firebaseConfig = {
+directly underneath:
+
+<script>
+So it should go roughly around the start of the JavaScript section, just BEFORE:
+
+const bingoItems = [
+⚡ Firebase SDK Import Block
+Paste THIS block:
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+RIGHT ABOVE:
+
+</body>
+So scroll almost all the way to the bottom of the file and paste it just before the final body closing tag.
+
+🌭 In human terms:
+
+First Firebase bit = near top of script
+
+Second Firebase bit = near very bottom of file
+
+
+so after the final script and before body and html on the final lines
+
+Not quite 😆
+You want it:
+
+AFTER all your bingo code
+
+BUT BEFORE the closing </body> tag
+
+AND still INSIDE the <body>
+
+So the VERY bottom of your file should end like this:
+
+    ensureBoards();
+    renderPlayerSelect();
+    renderOverview();
+    renderBoards();
+  </script>
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
+  <script>
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+
+</body>
+</html>
+So:
+
+✅ after your main bingo <script>
+
+✅ before </body>
+
+❌ not after </body> or </html>
+
+Tiny important HTML gremlin there 😆
+
+
+Then what on the firebase screen under project settings
+
+Done ☀️🍦
+
+I’ve updated both:
+
+the browser/app title
+
+the big visible heading on the page
+
+to:
+
+Groom Great British Heatwave Bingo
+
+Great British Heatwave Bingo Full Index
+Is that whole canvas code on the side you have done going to match the changes I made on the index file previously? or shall I copy the index I am using on github and then send  on here  for you to amend the last part?
+
+The canvas version I can currently see IS the latest combined version ☀️
+Including:
+
+your renamed title
+
+the extra emoji edits
+
+Firebase setup
+
+the added last-row emoji changes
+
+the synced multiplayer structure
+
+your newer bingo items
+
+So if the GitHub file is only a few edits behind, I’d actually trust/use the canvas version now as the “master copy”.
+
+HOWEVER 👀
+If you have made lots of extra edits directly in GitHub since then that are NOT in the canvas:
+
+extra styling
+
+wording tweaks
+
+extra buttons
+
+PWA bits
+
+bug fixes
+
+new board logic
+
+…then yes, safest option is:
+
+🌴 BEST METHOD
+Copy the ENTIRE current GitHub index.html
+and paste it here.
+
+Then I can:
+
+preserve ALL your newest edits
+
+ONLY inject the Firebase/live-sync parts carefully
+
+avoid overwriting anything important
+
+That is the safest “no accidental chaos gremlin” route 😆
+
+
+Great British Heatwave Bingo Full Index
+my code currently on the github page is:
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Great British Heatwave Bingo</title>
   <style>
     :root {
       --sun-yellow: #ffd166;
@@ -74,7 +413,7 @@
       margin-top: 16px;
     }
 
-    button {
+    button, select {
       border: none;
       border-radius: 999px;
       padding: 11px 15px;
@@ -86,14 +425,16 @@
       font-size: 0.95rem;
     }
 
-    button:hover {
+    button:hover, select:hover {
       transform: translateY(-1px);
     }
 
-    .tab-button.active {
+    .orange {
       background: var(--sun-orange);
-      color: white;
-      outline: 3px solid rgba(255, 255, 255, 0.9);
+    }
+
+    .pink {
+      background: #ff5d8f;
     }
 
     .danger {
@@ -107,14 +448,6 @@
       color: #0b7285;
     }
 
-    .page-view {
-      display: none;
-    }
-
-    .page-view.active {
-      display: block;
-    }
-
     .overview-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
@@ -122,9 +455,11 @@
       margin-bottom: 22px;
     }
 
-    .single-player-wrap {
-      max-width: 760px;
-      margin: 0 auto;
+    .family-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      align-items: start;
     }
 
     .board {
@@ -138,7 +473,7 @@
     .board h3 {
       margin: 0 0 10px;
       text-align: center;
-      font-size: 1.45rem;
+      font-size: 1.3rem;
       color: #ef7b00;
     }
 
@@ -172,32 +507,14 @@
 
     .tile {
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
 
     .tile.checked, .big-card.checked {
       background: var(--green);
       border-color: var(--sea-blue);
-      position: relative;
-      opacity: 0.96;
-    }
-
-    .tile.checked::after, .big-card.checked::after {
-      content: "✓";
-      position: absolute;
-      top: 6px;
-      right: 9px;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--sea-blue);
-      color: white;
-      font-size: 1rem;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 3px 7px rgba(0,0,0,0.18);
+      text-decoration: line-through;
+      opacity: 0.92;
     }
 
     .winner {
@@ -235,28 +552,6 @@
       margin-top: 8px;
     }
 
-    .admin-panel {
-      margin: 12px auto 0;
-      max-width: 260px;
-      text-align: center;
-      background: rgba(255,255,255,0.68);
-      border: 2px dashed var(--sun-yellow);
-      border-radius: 18px;
-      padding: 8px;
-    }
-
-    .admin-panel summary {
-      cursor: pointer;
-      font-weight: 800;
-      color: #0b7285;
-    }
-
-    .admin-panel button {
-      margin-top: 8px;
-      font-size: 0.85rem;
-      padding: 9px 12px;
-    }
-
     @media print {
       body {
         background: white;
@@ -275,37 +570,35 @@
 <body>
   <div class="app">
     <header>
-      <h1>☀️ Great Groom Heatwave Bingo 🍦</h1>
+      <h1>☀️ Great British Heatwave Bingo 🍦</h1>
       <p class="subtitle">
         Bank Holiday family spotting game: tick it when someone says it, does it, wears it, buys it, moans about it, or dramatically melts beside a fan.
       </p>
 
-      <div id="pageButtons" class="controls"></div>
-
       <div class="controls">
-        <button class="danger" onclick="resetTicksOnly()">🧽 Reset Ticks Only</button>
+        <select id="playerSelect"></select>
+        <button class="orange" onclick="randomiseBoard()">🎲 Shuffle Selected Card</button>
+        <button onclick="resetSelectedBoard()">↩️ Reset Selected Card</button>
+        <button class="pink" onclick="shuffleAllBoards()">🌈 Shuffle All Cards</button>
+        <button class="danger" onclick="resetAll()">🧽 Reset Everything</button>
       </div>
 
-      <details class="admin-panel">
-        <summary>⚙️ Admin options</summary>
-        <button class="danger" onclick="shuffleAllBoards()">🎲 Shuffle / Create New Cards</button>
-      </details>
-
-      <div class="small-note">Tap a tile to mark a sighting. Each person has their own 12-square card. This version syncs using Firebase.</div>
+      <div class="small-note">First to complete a row wins. Big overview board shows every possible item.</div>
     </header>
 
-    <section id="page-main" class="page-view active">
-      <h2 class="section-title">🏖️ Main Board</h2>
-      <div id="overview" class="overview-grid"></div>
-      <p class="note">Tap a tile to mark a sighting on the main overview board.</p>
-    </section>
+    <h2 class="section-title">🏖️ Big Family Overview Board</h2>
+    <div id="overview" class="overview-grid"></div>
 
-    <div id="playerPages"></div>
+    <h2 class="section-title">🍦 Smaller Family Bingo Cards</h2>
+    <div id="boards" class="family-grid"></div>
 
-    
+    <p class="note">
+      Editing tip: change the names inside <strong>familyMembers</strong>, and change or remove any bingo squares inside <strong>bingoItems</strong>. Save this file as <strong>index.html</strong>.
+    </p>
   </div>
 
   <script>
+        // 🔥 Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyA-UsE2lGAuZjEy9i5kl2OSlmOJ0wbIiy0",
       authDomain: "groom-hot-weather-bingo.firebaseapp.com",
@@ -315,10 +608,6 @@
       appId: "1:991263884911:web:4798ec87001a88a3e1ef9a",
       measurementId: "G-MTF4HNSZ22"
     };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const gameRef = db.collection("games").doc("bankHolidayHeatwaveBingo");
 
     const bingoItems = [
       "🥵 It is boiling",
@@ -382,10 +671,7 @@
       "🗣️ People socialising out on the street",
       "🧥 Someone wearing a jumper/coat",
       "🥵 People complaining about it being hot",
-      "😆 Kids squealing in the street",
-      "🎶 People listening to reggae because it is just like the Caribbean",
-      "🌳 BBQs in the park",
-      "🍻 People putting ice in pints of cider"
+      "😆 Kids squealing in the street"
     ];
 
     const familyMembers = [
@@ -396,34 +682,20 @@
       "🐝 Janine"
     ];
 
-    const boardSize = 12;
+    const boardSize = 9;
+    const storageKey = "greatBritishHeatwaveBingo";
 
-    let state = {
+    let state = JSON.parse(localStorage.getItem(storageKey)) || {
       boards: {},
       overview: {}
     };
 
-    let isSaving = false;
-    let currentPage = "main";
+    function saveState() {
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    }
 
     function shuffle(array) {
       return [...array].sort(() => Math.random() - 0.5);
-    }
-
-    function createFreshState() {
-      const fresh = {
-        boards: {},
-        overview: {}
-      };
-
-      familyMembers.forEach(name => {
-        fresh.boards[name] = {
-          items: shuffle(bingoItems).slice(0, boardSize),
-          checked: {}
-        };
-      });
-
-      return fresh;
     }
 
     function ensureBoards() {
@@ -434,136 +706,64 @@
             checked: {}
           };
         }
-
-        if (state.boards[name].items.length !== boardSize) {
-          state.boards[name] = {
-            items: shuffle(bingoItems).slice(0, boardSize),
-            checked: {}
-          };
-        }
       });
     }
 
-    async function saveState() {
-      isSaving = true;
-      await gameRef.set(state);
-      setTimeout(() => {
-        isSaving = false;
-      }, 200);
-    }
-
-    async function loadOrCreateGame() {
-      const doc = await gameRef.get();
-
-      if (doc.exists) {
-        state = doc.data();
-        ensureBoards();
-        renderAll();
-        await saveState();
-      } else {
-        state = createFreshState();
-        renderAll();
-        await saveState();
-      }
-    }
-
-    function listenForLiveUpdates() {
-      gameRef.onSnapshot(doc => {
-        if (!doc.exists || isSaving) return;
-        state = doc.data();
-        ensureBoards();
-        renderAll();
-      });
-    }
-
-    function renderAll() {
-      renderPageButtons();
-      renderOverview();
-      renderPlayerPages();
-      showPage(currentPage);
-    }
-
-    function pageIdForName(name) {
-      return "player-" + safeId(name);
-    }
-
-    function renderPageButtons() {
-      const buttons = document.getElementById("pageButtons");
-      buttons.innerHTML = `
-        <button class="tab-button ${currentPage === "main" ? "active" : ""}" onclick="showPage('main')">🏖️ Main Board</button>
-        ${familyMembers.map(name => `<button class="tab-button ${currentPage === pageIdForName(name) ? "active" : ""}" onclick="showPage('${pageIdForName(name)}')">${name}</button>`).join("")}
-      `;
-    }
-
-    function showPage(pageName) {
-      currentPage = pageName;
-      document.querySelectorAll(".page-view").forEach(page => page.classList.remove("active"));
-
-      const page = document.getElementById(pageName === "main" ? "page-main" : "page-" + pageName);
-      if (page) page.classList.add("active");
-
-      document.querySelectorAll(".tab-button").forEach(button => button.classList.remove("active"));
-      const matchingButton = [...document.querySelectorAll(".tab-button")].find(button => button.getAttribute("onclick") === `showPage('${pageName}')`);
-      if (matchingButton) matchingButton.classList.add("active");
+    function renderPlayerSelect() {
+      const select = document.getElementById("playerSelect");
+      select.innerHTML = familyMembers.map(name => <option value="${name}">${name}</option>).join("");
     }
 
     function renderOverview() {
       const overview = document.getElementById("overview");
       overview.innerHTML = bingoItems.map((item, index) => {
         const checked = state.overview[index] ? "checked" : "";
-        return `<div class="big-card ${checked}" onclick="toggleOverview(${index})">${item}</div>`;
+        return <div class="big-card ${checked}" onclick="toggleOverview(${index})">${item}</div>;
       }).join("");
     }
 
-    function renderPlayerPages() {
-      const wrapper = document.getElementById("playerPages");
+    function renderBoards() {
+      const wrapper = document.getElementById("boards");
       wrapper.innerHTML = "";
 
       familyMembers.forEach(name => {
         const board = state.boards[name];
-        const page = document.createElement("section");
-        page.className = "page-view";
-        page.id = "page-" + pageIdForName(name);
+        const boardEl = document.createElement("div");
+        boardEl.className = "board";
 
-        page.innerHTML = `
-          <h2 class="section-title">${name}'s Bingo Card</h2>
-          <div class="single-player-wrap">
-            <div class="board">
-              <h3>${name}'s Card</h3>
-              <div class="bingo-grid">
-                ${board.items.map((item, index) => {
-                  const checked = board.checked[index] ? "checked" : "";
-                  return `<div class="tile ${checked}" onclick="toggleTile('${escapeName(name)}', ${index})">${item}</div>`;
-                }).join("")}
-              </div>
-              <div id="winner-${safeId(name)}" class="winner ${isWinner(name) ? "show" : ""}">🏆 Bingo! ${name} has completed a row!</div>
-            </div>
+        boardEl.innerHTML = 
+          <h3>${name}'s Card</h3>
+          <div class="bingo-grid">
+            ${board.items.map((item, index) => {
+              const checked = board.checked[index] ? "checked" : "";
+              return <div class="tile ${checked}" onclick="toggleTile('${escapeName(name)}', ${index})">${item}</div>;
+            }).join("")}
           </div>
-        `;
+          <div id="winner-${safeId(name)}" class="winner ${isWinner(name) ? "show" : ""}">🏆 Bingo! ${name} has completed a row!</div>
+        ;
 
-        wrapper.appendChild(page);
+        wrapper.appendChild(boardEl);
       });
     }
 
     function escapeName(name) {
-      return name.replace(/'/g, "\'");
+      return name.replace(/'/g, "\\'");
     }
 
     function safeId(name) {
       return name.replace(/[^a-zA-Z0-9]/g, "");
     }
 
-    async function toggleOverview(index) {
+    function toggleOverview(index) {
       state.overview[index] = !state.overview[index];
+      saveState();
       renderOverview();
-      await saveState();
     }
 
-    async function toggleTile(name, index) {
+    function toggleTile(name, index) {
       state.boards[name].checked[index] = !state.boards[name].checked[index];
-      renderPlayerPages();
-      showPage(currentPage);
-      await saveState();
+      saveState();
+      renderBoards();
     }
 
     function isWinner(name) {
@@ -572,38 +772,279 @@
         [0, 1, 2],
         [3, 4, 5],
         [6, 7, 8],
-        [9, 10, 11],
-        [0, 3, 6, 9],
-        [1, 4, 7, 10],
-        [2, 5, 8, 11]
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
       ];
       return winningLines.some(line => line.every(index => checked[index]));
     }
 
-    async function resetTicksOnly() {
-      Object.keys(state.overview).forEach(index => {
-        state.overview[index] = false;
-      });
+    function randomiseBoard() {
+      const selected = document.getElementById("playerSelect").value;
+      state.boards[selected] = {
+        items: shuffle(bingoItems).slice(0, boardSize),
+        checked: {}
+      };
+      saveState();
+      renderBoards();
+    }
 
+    function resetSelectedBoard() {
+      const selected = document.getElementById("playerSelect").value;
+      state.boards[selected].checked = {};
+      saveState();
+      renderBoards();
+    }
+
+    function shuffleAllBoards() {
       familyMembers.forEach(name => {
-        if (state.boards[name]) {
-          state.boards[name].checked = {};
-        }
+        state.boards[name] = {
+          items: shuffle(bingoItems).slice(0, boardSize),
+          checked: {}
+        };
       });
-
-      renderAll();
-      await saveState();
+      saveState();
+      renderBoards();
     }
 
-    async function shuffleAllBoards() {
-      state = createFreshState();
-      renderAll();
-      await saveState();
+    function resetAll() {
+      state = {
+        boards: {},
+        overview: {}
+      };
+      ensureBoards();
+      saveState();
+      renderOverview();
+      renderBoards();
     }
 
-    loadOrCreateGame().then(() => {
-      listenForLiveUpdates();
-    });
+        ensureBoards();
+    renderPlayerSelect();
+    renderOverview();
+    renderBoards();
   </script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+
 </body>
 </html>
+
+I’ve compared your GitHub version against the canvas version. The main issue is your GitHub file has Firebase “attached at the bottom”, but the bingo itself is still saving to localStorage, so it won’t live-sync yet.
+
+Thought for 7s
+Use the whole canvas version as your new master copy ✅
+
+Your GitHub version currently has:
+
+✅ your bingo wording/items
+
+✅ your family names
+
+✅ Firebase config pasted in
+
+❌ but it is still using localStorage
+
+❌ Firebase is not actually running the game sync yet
+
+The canvas version has:
+
+✅ your same current bingo list
+
+✅ the title changed to Groom Great British Heatwave Bingo
+
+✅ Firebase SDK in the correct place
+
+✅ live Firestore saving/loading
+
+✅ shared syncing code
+
+So don’t just amend the last bit of your GitHub file. Replace the whole GitHub index.html with the canvas code.
+
+Tiny gremlin note: after replacing, use Reset Everything once on the webpage so Firebase creates the fresh shared game board.
+
+
+Great British Heatwave Bingo Full Index
+Is the title just in the top section at Row 6 or appears elsewhere? If I choose to change it
+
+Great British Heatwave Bingo Full Index
+Please change title to Great Groom Heatwave Bingo
+
+Done ☀️🍦
+
+The title has now been changed in both places to:
+
+Great Groom Heatwave Bingo
+So:
+
+browser tab/app name ✅
+
+big page heading ✅
+
+
+Yes ✅
+
+Copy the whole canvas code into your GitHub index.html file.
+
+On GitHub
+Open your repository.
+
+Open index.html.
+
+Click the pencil/edit button.
+
+Select everything in the file.
+
+Delete it.
+
+Paste the full canvas code.
+
+Click Commit changes.
+
+Then on Firebase
+You don’t need more Project Settings now. You need:
+
+Build → Firestore Database → Rules
+Make sure rules are set to test/open while you test:
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+Click Publish.
+
+Then open your GitHub Pages link on two devices and tick a square. If it changes on both, the bingo sun-beast is alive ☀️
+
+
+Where is the link?
+
+Great, when I click reset it resets all pages right, so takes away ticks but doesnt change whats on boards???? I quite like the shuffle mode so instead of reset can there be a shuffle button capability but it be out of the way somewhere on the page so it isnt accidentally pressed by anyone
+
+Yes, at the moment Reset Everything creates fresh boards, so it can change what’s on each card. I’ll change it so “Reset ticks” only removes ticks, then tuck the shuffle option away in a little admin area so nobody heatwave-panic-presses it.
+
+Thought for 10s
+Done ✅
+
+I changed it so:
+
+Reset Ticks Only removes ticks but keeps the same board items
+
+Shuffle / Create New Cards is tucked inside ⚙️ Admin options
+
+Shuffle will create new cards, but it is hidden away so it is less likely to be pressed accidentally 🌞
+
+
+Great British Heatwave Bingo Full Index
+Make the code apply the following changes:
+
+Add to categories: 
+People listening to reggae because it's just like the Caribbean
+BBQs in the park
+People putting ice in pints of cider
+
+And please make it so it ticks boxes instead of crossing lines out.
+
+Done ✅
+
+I’ve added the 3 new bingo items and changed the checked style so boxes now show a tick badge instead of crossing the text out.
+
+
+Please add another board for a 6th player with the name Max and some form of hot person, melting emoji next to his name
+
+Done ☀️🫠
+
+I’ve added a 6th player board:
+
+"🫠 Max"
+So Max now gets his own melting-in-the-heat bingo card 😆
+
+
+
+
+Great British Heatwave Bingo Full Index
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Great Groom Heatwave Bingo</title>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --sun-yellow: #ffd166;
+      --sun-orange: #ff9f1c;
+      --ice-blue: #7bdff2;
+      --sea-blue: #2ec4b6;
+      --pink: #ffafcc;
+      --coral: #ff6b6b;
+      --cream: #fff8dc;
+      --white: #ffffff;
+      --text: #243447;
+      --green: #b7f7d4;
+      --shadow: rgba(0, 0, 0, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #fff2a8, #bdefff, #ffd6e8);
+      color: var(--text);
+      min-height: 100vh;
+Ask ChatGPT to edit
