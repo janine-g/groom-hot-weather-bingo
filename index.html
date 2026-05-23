@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Great British Heatwave Bingo</title>
+  <style>
+    :root {
+      --sun-yellow: #ffd166;
+      --sun-orange: #ff9f1c;
+      --ice-blue: #7bdff2;
+      --sea-blue: #2ec4b6;
+      --pink: #ffafcc;
+      --coral: #ff6b6b;
+      --cream: #fff8dc;
+      --white: #ffffff;
+      --text: #243447;
+      --green: #b7f7d4;
+      --shadow: rgba(0, 0, 0, 0.13);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #fff2a8, #bdefff, #ffd6e8);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 14px;
+    }
+
+    .app {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.9);
+      border: 4px solid var(--sun-yellow);
+      border-radius: 28px;
+      padding: 18px;
+      text-align: center;
+      box-shadow: 0 10px 30px var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      color: #ef7b00;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 0 auto;
+      max-width: 850px;
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    button, select {
+      border: none;
+      border-radius: 999px;
+      padding: 11px 15px;
+      font-weight: 800;
+      cursor: pointer;
+      background: var(--sea-blue);
+      color: white;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.15);
+      font-size: 0.95rem;
+    }
+
+    button:hover, select:hover {
+      transform: translateY(-1px);
+    }
+
+    .orange {
+      background: var(--sun-orange);
+    }
+
+    .pink {
+      background: #ff5d8f;
+    }
+
+    .danger {
+      background: var(--coral);
+    }
+
+    .section-title {
+      margin: 24px 0 12px;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      text-align: center;
+      color: #0b7285;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .family-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      align-items: start;
+    }
+
+    .board {
+      background: rgba(255,255,255,0.93);
+      border: 4px solid var(--sun-yellow);
+      border-radius: 24px;
+      padding: 13px;
+      box-shadow: 0 9px 20px var(--shadow);
+    }
+
+    .board h3 {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 1.3rem;
+      color: #ef7b00;
+    }
+
+    .bingo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .big-card, .tile {
+      background: var(--white);
+      border: 2px solid var(--sun-yellow);
+      border-radius: 16px;
+      min-height: 84px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 800;
+      line-height: 1.22;
+      user-select: none;
+      word-break: normal;
+    }
+
+    .big-card {
+      min-height: 76px;
+      font-size: 0.86rem;
+      cursor: pointer;
+    }
+
+    .tile {
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+
+    .tile.checked, .big-card.checked {
+      background: var(--green);
+      border-color: var(--sea-blue);
+      text-decoration: line-through;
+      opacity: 0.92;
+    }
+
+    .winner {
+      background: #fff3b0;
+      border: 3px solid var(--sun-orange);
+      border-radius: 18px;
+      padding: 10px;
+      text-align: center;
+      font-weight: 900;
+      margin-top: 10px;
+      display: none;
+      color: #8a4b00;
+    }
+
+    .winner.show {
+      display: block;
+    }
+
+    .note {
+      text-align: center;
+      margin: 16px auto 0;
+      max-width: 850px;
+      font-size: 0.94rem;
+      background: rgba(255,255,255,0.82);
+      border: 2px solid var(--sun-yellow);
+      border-radius: 18px;
+      padding: 11px;
+      line-height: 1.45;
+    }
+
+    .small-note {
+      font-size: 0.82rem;
+      opacity: 0.85;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .controls, .note {
+        display: none;
+      }
+
+      .board, header {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>☀️ Great British Heatwave Bingo 🍦</h1>
+      <p class="subtitle">
+        Bank Holiday family spotting game: tick it when someone says it, does it, wears it, buys it, moans about it, or dramatically melts beside a fan.
+      </p>
+
+      <div class="controls">
+        <select id="playerSelect"></select>
+        <button class="orange" onclick="randomiseBoard()">🎲 Shuffle Selected Card</button>
+        <button onclick="resetSelectedBoard()">↩️ Reset Selected Card</button>
+        <button class="pink" onclick="shuffleAllBoards()">🌈 Shuffle All Cards</button>
+        <button class="danger" onclick="resetAll()">🧽 Reset Everything</button>
+      </div>
+
+      <div class="small-note">First to complete a row wins. Big overview board shows every possible item.</div>
+    </header>
+
+    <h2 class="section-title">🏖️ Big Family Overview Board</h2>
+    <div id="overview" class="overview-grid"></div>
+
+    <h2 class="section-title">🍦 Smaller Family Bingo Cards</h2>
+    <div id="boards" class="family-grid"></div>
+
+    <p class="note">
+      Editing tip: change the names inside <strong>familyMembers</strong>, and change or remove any bingo squares inside <strong>bingoItems</strong>. Save this file as <strong>index.html</strong>.
+    </p>
+  </div>
+
+  <script>
+    const bingoItems = [
+      "🥵 It is boiling",
+      "🧴 Sunburnt face/shoulders",
+      "🩴 Someone wearing sliders with socks",
+      "👕 Fat bloke with top off",
+      "🔥 Child having a meltdown",
+      "🍺 Someone already drunk before noon",
+      "🚗 Car windows fully down with loud music",
+      "🛒 Person buying ridiculous amounts of BBQ food",
+      "🪟 House with all the windows open",
+      "🐶 Dog being walked in the daytime",
+      "🚪 Shut the door/window, you'll let the heat in",
+      "🌭 BBQ smell",
+      "🕶️ Someone squinting dramatically at the sun",
+      "🍉 Someone saying they are melting",
+      "🧢 Tiny child in oversized sun hat",
+      "🏖️ Queue for an ice cream van",
+      "🚴 Shirtless cyclist",
+      "🐝 Panic over a wasp/bee",
+      "🪰 Fly annoying people",
+      "🧃 Someone carrying a multipack of drinks",
+      "🌡️ Someone talking about the weather being hot for May",
+      "🧴 Bright white streaks of badly rubbed-in sun cream",
+      "🛏️ I can't sleep in this heat",
+      "🎶 Music blasting from someone’s garden",
+      "🍫 Melted chocolate/ice-cream disaster",
+      "🛌 Someone napping",
+      "🩳 Hawaiian shirt spotted",
+      "🚒 Sound of an ice cream van tune",
+      "🌿 Crispy yellow grass",
+      "🏊 Someone buying a paddling pool",
+      "💦 Water fight",
+      "☀️ People sunbathing in the parks",
+      "📱 Phone overheating warning",
+      "🧯 It is hotter inside than outside",
+      "🧊 Someone with a hand-held fan on their face",
+      "🍺 Someone saying perfect pub weather",
+      "🧍 Person in front of open fridge",
+      "🚘 Car park/street rage because it is too hot",
+      "😴 This heat makes me tired",
+      "🍓 Huge amount of strawberries or strawberries selling out",
+      "🏃 Someone pretending they enjoy running in this heat",
+      "🥵 I cannot function in this weather",
+      "🧺 Picnic blanket spotted",
+      "🕺 Someone dramatically wafting their clothes",
+      "🫠 Someone saying they are melting",
+      "🦶 Bare feet on hot path regret/incident",
+      "🍉 Watermelon mentioned",
+      "🕶️ Sunglasses lost on someone’s head",
+      "🌼 Someone lawnmowing far too early/late in the day",
+      "🚗 Steering wheel is burning",
+      "🧊 Running out of ice cubes",
+      "🥤 Drink left outside goes warm",
+      "🌡️ Someone says surely this is hotter than forecast",
+      "🧍 Someone blocks the fan",
+      "🩴 Flip flop sounds heard",
+      "👃 Someone says they can smell BBQ",
+      "🚰 Someone says drink more water",
+      "🌴 Someone says it feels like being abroad",
+      "🗣️ People socialising out on the street",
+      "🧥 Someone wearing a jumper/coat",
+      "🥵 People complaining about it being hot",
+      "😆 Kids squealing in the street"
+    ];
+
+    const familyMembers = [
+      "🌻 Mum",
+      "🕶️ Dad",
+      "🔥 Amy",
+      "🍓 Emily",
+      "🐝 Janine"
+    ];
+
+    const boardSize = 9;
+    const storageKey = "greatBritishHeatwaveBingo";
+
+    let state = JSON.parse(localStorage.getItem(storageKey)) || {
+      boards: {},
+      overview: {}
+    };
+
+    function saveState() {
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    }
+
+    function shuffle(array) {
+      return [...array].sort(() => Math.random() - 0.5);
+    }
+
+    function ensureBoards() {
+      familyMembers.forEach(name => {
+        if (!state.boards[name]) {
+          state.boards[name] = {
+            items: shuffle(bingoItems).slice(0, boardSize),
+            checked: {}
+          };
+        }
+      });
+    }
+
+    function renderPlayerSelect() {
+      const select = document.getElementById("playerSelect");
+      select.innerHTML = familyMembers.map(name => `<option value="${name}">${name}</option>`).join("");
+    }
+
+    function renderOverview() {
+      const overview = document.getElementById("overview");
+      overview.innerHTML = bingoItems.map((item, index) => {
+        const checked = state.overview[index] ? "checked" : "";
+        return `<div class="big-card ${checked}" onclick="toggleOverview(${index})">${item}</div>`;
+      }).join("");
+    }
+
+    function renderBoards() {
+      const wrapper = document.getElementById("boards");
+      wrapper.innerHTML = "";
+
+      familyMembers.forEach(name => {
+        const board = state.boards[name];
+        const boardEl = document.createElement("div");
+        boardEl.className = "board";
+
+        boardEl.innerHTML = `
+          <h3>${name}'s Card</h3>
+          <div class="bingo-grid">
+            ${board.items.map((item, index) => {
+              const checked = board.checked[index] ? "checked" : "";
+              return `<div class="tile ${checked}" onclick="toggleTile('${escapeName(name)}', ${index})">${item}</div>`;
+            }).join("")}
+          </div>
+          <div id="winner-${safeId(name)}" class="winner ${isWinner(name) ? "show" : ""}">🏆 Bingo! ${name} has completed a row!</div>
+        `;
+
+        wrapper.appendChild(boardEl);
+      });
+    }
+
+    function escapeName(name) {
+      return name.replace(/'/g, "\\'");
+    }
+
+    function safeId(name) {
+      return name.replace(/[^a-zA-Z0-9]/g, "");
+    }
+
+    function toggleOverview(index) {
+      state.overview[index] = !state.overview[index];
+      saveState();
+      renderOverview();
+    }
+
+    function toggleTile(name, index) {
+      state.boards[name].checked[index] = !state.boards[name].checked[index];
+      saveState();
+      renderBoards();
+    }
+
+    function isWinner(name) {
+      const checked = state.boards[name].checked;
+      const winningLines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+      return winningLines.some(line => line.every(index => checked[index]));
+    }
+
+    function randomiseBoard() {
+      const selected = document.getElementById("playerSelect").value;
+      state.boards[selected] = {
+        items: shuffle(bingoItems).slice(0, boardSize),
+        checked: {}
+      };
+      saveState();
+      renderBoards();
+    }
+
+    function resetSelectedBoard() {
+      const selected = document.getElementById("playerSelect").value;
+      state.boards[selected].checked = {};
+      saveState();
+      renderBoards();
+    }
+
+    function shuffleAllBoards() {
+      familyMembers.forEach(name => {
+        state.boards[name] = {
+          items: shuffle(bingoItems).slice(0, boardSize),
+          checked: {}
+        };
+      });
+      saveState();
+      renderBoards();
+    }
+
+    function resetAll() {
+      state = {
+        boards: {},
+        overview: {}
+      };
+      ensureBoards();
+      saveState();
+      renderOverview();
+      renderBoards();
+    }
+
+    ensureBoards();
+    renderPlayerSelect();
+    renderOverview();
+    renderBoards();
+  </script>
+</body>
+</html>
